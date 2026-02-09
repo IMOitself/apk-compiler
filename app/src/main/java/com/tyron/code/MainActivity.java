@@ -2,10 +2,16 @@ package com.tyron.code;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.WindowCompat;
+
 
 import com.tyron.code.ui.project.ProjectManagerFragment;
 
@@ -16,13 +22,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setData(Uri.parse(String.format("package:%s", getPackageName())));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(intent);
+                }
+            }
+        }
+
         String receivedString = getIntent().getStringExtra("project_path");
+        boolean isBuildAction = "imo.buildapk.RECEIVE_PROJECT_PATH".equals(getIntent().getAction());
+
         //adb shell am start -n com.tyron.code/.MainActivity -a imo.buildapk.RECEIVE_PROJECT_PATH --es project_path "/path/to/project"
-        if (receivedString != null) {
-            new androidx.appcompat.app.AlertDialog.Builder(this)
+        if (isBuildAction && receivedString == null) {
+             new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("Project path not found.")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        } else if (receivedString != null) {
+            new AlertDialog.Builder(this)
                     .setTitle("Received project_path")
                     .setMessage(receivedString)
-                    .setPositiveButton(android.R.string.ok, null)
+                    .setCancelable(false)
+                    .setPositiveButton("Open Project", (d, w) -> {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(receivedString, isBuildAction))
+                                .commit();
+                    })
                     .show();
         }
 

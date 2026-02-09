@@ -85,8 +85,13 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     private Handler mHandler;
 
     public static MainFragment newInstance(@NonNull String projectPath) {
+        return newInstance(projectPath, false);
+    }
+
+    public static MainFragment newInstance(@NonNull String projectPath, boolean autoBuild) {
         Bundle bundle = new Bundle();
         bundle.putString("project_path", projectPath);
+        bundle.putBoolean("auto_build", autoBuild);
 
         MainFragment fragment = new MainFragment();
         fragment.setArguments(bundle);
@@ -120,6 +125,8 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     private CompilerServiceConnection mServiceConnection;
     private IndexServiceConnection mIndexServiceConnection;
 
+    private boolean mAutoBuild;
+
     private final CompileCallback mCompileCallback = this::compile;
     private final IndexCallback mIndexCallback = this::openProject;
 
@@ -138,6 +145,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
                 .addCallback(this, onBackPressedCallback);
 
         String projectPath = requireArguments().getString("project_path");
+        mAutoBuild = requireArguments().getBoolean("auto_build", false);
         mProject = new Project(new File(projectPath));
         mProjectManager = ProjectManager.getInstance();
         mProjectManager.addOnProjectOpenListener(this);
@@ -232,6 +240,13 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
                     mProgressBar.setVisibility(indexing ? View.VISIBLE : View.GONE);
                     CompletionEngine.setIndexing(indexing);
                     refreshToolbar();
+
+                    if (!indexing && mAutoBuild) {
+                        if (mProject.equals(ProjectManager.getInstance().getCurrentProject())) {
+                            mAutoBuild = false;
+                            compile(BuildType.RELEASE);
+                        }
+                    }
                 });
         mMainViewModel.getCurrentState()
                 .observe(getViewLifecycleOwner(), mToolbar::setSubtitle);
