@@ -1,10 +1,26 @@
 # apk-compiler
 the ultimate goal of this repository is to strip [tyron12233/CodeAssist](https://github.com/tyron12233/CodeAssist) to only compiling apks
-<br><br><br><br>
+<br><br><br>
 
-The guide below is for **Windows** users
+## usage
+- it takes an android project path e.g `storage/emulated/0/example-project` and immediately compile it.
+- the project path can either be sent via adb.
 
-## Prerequisites
+example:
+```
+adb shell am start -n com.tyron.code/.MainActivity -a imo.buildapk.RECEIVE_PROJECT_PATH --es project_path "storage/emulated/0/example-project"
+        
+```
+- or by creating an app that sends an intent action to this project `com.tyron.code`
+
+example:
+```
+[work in progress]
+```
+<br><br><br>
+
+## building this project
+the guide below is for **Windows** users
 ```
 git clone https://github.com/IMOitself/build-apk.git
 ```
@@ -20,16 +36,14 @@ mkdir temp_build\jdk
 tar -xf gradle-7.0.2-bin.zip -C temp_build\gradle
 tar -xf jdk-11.0.29+7.zip -C temp_build\jdk
 ```
-<br><br>
+<br>
 
-## Building the APK
 once you have `temp_build\gradle` and `temp_build\jdk` after doing the code above, run this to compile the project to apk
 ```powershell
 $env:JAVA_HOME="$PWD\temp_build\jdk\jdk-11.0.29+7"
 & "$PWD\temp_build\gradle\gradle-7.0.2\bin\gradle.bat" assembleDebug
 ```
 <br><br>
-### Output
 The built APK will be located at the root of this repository:
 ```
 app-release.apk
