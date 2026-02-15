@@ -1,5 +1,5 @@
 # apk-compiler
-the ultimate goal of this repository is to simplify [tyron12233/CodeAssist](https://github.com/tyron12233/CodeAssist)'s code only for compiling apks
+the ultimate goal of this repository is to strip [tyron12233/CodeAssist](https://github.com/tyron12233/CodeAssist) to only compiling apks
 <br><br><br><br>
 
 The guide below is for **Windows** users
