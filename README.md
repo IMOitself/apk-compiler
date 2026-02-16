@@ -26,7 +26,7 @@ tar -xf jdk-11.0.29+7.zip -C temp_build\jdk
 once you have `temp_build\gradle` and `temp_build\jdk` after doing the code above, run this to compile the project to apk
 ```powershell
 $env:JAVA_HOME="$PWD\temp_build\jdk\jdk-11.0.29+7"
-& "$PWD\temp_build\gradle\gradle-7.0.2\bin\gradle.bat" assembleDebug
+& "$PWD\temp_build\gradle\gradle-7.3.3\bin\gradle.bat" assembleRelease
 ```
 <br><br>
 ### Output
