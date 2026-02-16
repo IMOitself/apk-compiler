@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 try {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
@@ -46,18 +47,27 @@ public class MainActivity extends AppCompatActivity {
                     .setTitle("Error")
                     .setMessage("Project path not found.")
                     .setPositiveButton(android.R.string.ok, null)
-                    .show();
-        } else if (receivedString != null) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Received project_path")
-                    .setMessage(receivedString)
-                    .setCancelable(false)
-                    .setPositiveButton("Open Project", (d, w) -> {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(receivedString, isBuildAction))
-                                .commit();
-                    })
-                    .show();
+                     .show();
+        } 
+        
+        if (receivedString != null) {
+            if (isBuildAction) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(receivedString, true))
+                        .commit();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Received project_path")
+                        .setMessage(receivedString)
+                        .setCancelable(false)
+                        .setPositiveButton("Open Project", (d, w) -> {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(receivedString, false))
+                                    .commit();
+                        })
+                        .show();
+            }
+            return;
         }
 
         if (getSupportFragmentManager().findFragmentByTag(ProjectManagerFragment.TAG) == null) {
