@@ -405,7 +405,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
         if (mAutoBuild) 
             mMainViewModel.isIndexing().observe(getViewLifecycleOwner(), indexing -> {
                 if (!indexing && mAutoBuild) {
-                    compile(BuildType.RELEASE);
+                    mCompileCallback.compile(BuildType.RELEASE);
                     mAutoBuild = false;
                 }
             });
