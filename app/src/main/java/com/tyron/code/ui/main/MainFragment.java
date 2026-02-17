@@ -149,6 +149,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
         mProject = new Project(new File(projectPath));
         mProjectManager = ProjectManager.getInstance();
         mProjectManager.addOnProjectOpenListener(this);
+
         mLogViewModel = new ViewModelProvider(requireActivity()).get(LogViewModel.class);
         mMainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mFileViewModel = new ViewModelProvider(requireActivity()).get(FileViewModel.class);
@@ -240,13 +241,6 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
                     mProgressBar.setVisibility(indexing ? View.VISIBLE : View.GONE);
                     CompletionEngine.setIndexing(indexing);
                     refreshToolbar();
-
-                    if (!indexing && mAutoBuild) {
-                        if (mProject.equals(ProjectManager.getInstance().getCurrentProject())) {
-                            mAutoBuild = false;
-                            compile(BuildType.RELEASE);
-                        }
-                    }
                 });
         mMainViewModel.getCurrentState()
                 .observe(getViewLifecycleOwner(), mToolbar::setSubtitle);
@@ -406,6 +400,15 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
         Intent intent = new Intent(requireContext(), IndexService.class);
         requireActivity().startService(intent);
         requireActivity().bindService(intent, mIndexServiceConnection, Context.BIND_IMPORTANT);
+
+        mLogViewModel.d(LogViewModel.BUILD_LOG, "auto build: " + mAutoBuild);
+        if (mAutoBuild) 
+            mMainViewModel.isIndexing().observe(getViewLifecycleOwner(), indexing -> {
+                if (!indexing && mAutoBuild) {
+                    compile(BuildType.RELEASE);
+                    mAutoBuild = false;
+                }
+            });
     }
 
     private void saveAll() {
