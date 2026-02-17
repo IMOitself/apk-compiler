@@ -14,9 +14,19 @@ adb shell am start -n com.tyron.code/.MainActivity -a imo.buildapk.RECEIVE_PROJE
 - or by creating an app that sends an intent action to this project `com.tyron.code`
 
 example:
+
+```java
+import android.content.Intent;
+
+String projectPath = "INSERT PATH HERE"
+
+Intent intent = new Intent();
+intent.setClassName("com.tyron.code", "com.tyron.code.MainActivity");
+intent.setAction(Intent.ACTION_SEND);
+intent.putExtra("project_path", projectPath);
+startActivity(intent);
 ```
-[work in progress]
-```
+see [IMOaswell/compiler-trigger](https://github.com/IMOaswell/compiler-trigger) for actual implementation
 <br><br><br>
 
 ## building this project
