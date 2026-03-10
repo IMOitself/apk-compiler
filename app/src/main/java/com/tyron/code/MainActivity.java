@@ -84,4 +84,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         return super.onKeyUp(keyCode, event);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finishAffinity();
+    }
+
 }
