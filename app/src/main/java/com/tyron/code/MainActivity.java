@@ -49,14 +49,7 @@ public class MainActivity extends AppCompatActivity {
             .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(projectPath, true))
             .commit();
             return;
-        } 
-
-        new AlertDialog.Builder(this)
-        .setTitle("Error")
-        .setMessage("Project path not found.")
-        .setPositiveButton(android.R.string.ok, null)
-        .show();
-        
+        }
 
         if (getSupportFragmentManager().findFragmentByTag(ProjectManagerFragment.TAG) == null) {
             getSupportFragmentManager().beginTransaction()
