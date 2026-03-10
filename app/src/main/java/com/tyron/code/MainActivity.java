@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         String projectPath = getIntent().getStringExtra("project_path");
         if (projectPath != null) {
+            /**
+             * uncomment this to show confirmation dialog first
             new AlertDialog.Builder(this)
             .setTitle("Received project_path")
             .setMessage(projectPath)
@@ -42,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(projectPath, true))
                     .commit())
             .show();
+            **/
+            getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(projectPath, true))
+            .commit();
             return;
         } 
 
