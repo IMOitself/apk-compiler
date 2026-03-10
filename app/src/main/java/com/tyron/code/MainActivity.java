@@ -34,28 +34,28 @@ public class MainActivity extends AppCompatActivity {
         String projectPath = getIntent().getStringExtra("project_path");
         if (projectPath != null) {
             new AlertDialog.Builder(this)
-                    .setTitle("Received project_path")
-                    .setMessage(projectPath)
-                    .setCancelable(false)
-                    .setPositiveButton("Open Project", (d, w) -> getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(projectPath, true))
-                            .commit())
-                    .show();
+            .setTitle("Received project_path")
+            .setMessage(projectPath)
+            .setCancelable(false)
+            .setPositiveButton("Open Project", (d, w) -> 
+                    getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, com.tyron.code.ui.main.MainFragment.newInstance(projectPath, true))
+                    .commit())
+            .show();
             return;
         } 
 
         new AlertDialog.Builder(this)
-                .setTitle("Error")
-                .setMessage("Project path not found.")
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+        .setTitle("Error")
+        .setMessage("Project path not found.")
+        .setPositiveButton(android.R.string.ok, null)
+        .show();
         
 
         if (getSupportFragmentManager().findFragmentByTag(ProjectManagerFragment.TAG) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new ProjectManagerFragment(),
-                             ProjectManagerFragment.TAG)
-                    .commit();
+            .replace(R.id.fragment_container, new ProjectManagerFragment(), ProjectManagerFragment.TAG)
+            .commit();
         }
     }
 
