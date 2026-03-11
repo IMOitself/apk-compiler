@@ -1,5 +1,5 @@
 # apk-compiler
-the ultimate goal of this repository is to strip [tyron12233/CodeAssist](https://github.com/tyron12233/CodeAssist) to only compiling apks
+a fork of [tyron12233/CodeAssist](https://github.com/tyron12233/CodeAssist) for direct APK builds via adb or third-party apps.
 <br><br><br>
 
 ## usage
